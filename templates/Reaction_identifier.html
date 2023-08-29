@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="{{url_for('static',filename='css/style.css')}}">
+  </head>
+  <body>
+    <h1>
+      Reaction Database
+    </h1>
+    <form action="{{url_for('results')}}" method="post" class="login-box">
+      <label for="element">Target Element: </label>
+      <br>
+      <input type="text" name="element"
+              placeholder="eg 70Ge"
+              value="{{ request.form['element'] }}"></input>
+      <br>
+      <label for="energy">Energy Value: </label>
+      <br>
+      <input type="number" name="energy"
+              value="{{ request.form['energy'] }}"></input>
+      <br>
+      <label for="reaction">Reaction Type: </label>
+      <br>
+        <select id="reaction" name="reaction"
+        value="{{ request.form['reaction'] }}">
+          <option value="pg">(p,γ)</option>
+          <option value="pn">(p,n)</option>
+          <option value="an">(a,n)</option>
+          <option value="ag">(a,γ)</option>
+        </select>
+        <br>
+        <button type="submit">
+          Submit
+        </button>
+    </form>
+
+    <a href="{{url_for('input')}}">
+      <button class="ButtonInput">Input Element Data</button>
+    </a>
+
+    <a href="{{url_for('reactioninput')}}">
+      <button class="ButtonInput">Input Reaction Data</button>
+    </a>
+  </body>
+</html>

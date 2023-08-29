@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="{{url_for('static',filename='css/style.css')}}">
+    </head>
+    <body>
+        <form action="{{url_for('input')}}"  method="post" class="login-box">
+            <label for="Name">Element Name:</label>
+            <br>
+            <input type="text" placeholder="70Ge" name="Name" value="{{request.form.get['Name']}}">
+            <br>
+
+            <label for="halfLife">Half-Life:</label>
+            <br>
+            <input type="text" placeholder="12mins" name="halfLife" value="{{request.form.get['halfLife']}}">
+            <br>
+            
+            <label for="abundance">Abundance: </label>
+            <br>
+            <input type="text" name="abundance" value="{{request.form.get['abundance']}}">
+            <br>
+            
+            <label for="parity">J/π: </label>
+            <br>
+            <input type="text" name="parity" value="{{request.form.get['parity']}}">
+            <br>
+
+            <label for="betaPlusdecay">β+ Decay: </label>
+            <br>
+            <input type="checkbox" name="betaPlusChecked" >
+            <!-- <input type="checkbox" name="check[0]" value="1"> -->
+            <br>
+
+            <label for="betaMinusdecay">β- Decay: </label>
+            <br>
+            <input type="checkbox" name="betaMinusChecked" >
+            <br>
+
+            <label for="ecDecay">Electron Capture: </label>
+            <br>
+            <input type="checkbox" name="ecChecked" >
+            <br>
+
+            <button type="submit">
+                Submit
+            </button>
+        </form>
+    </body>
+
+</html>

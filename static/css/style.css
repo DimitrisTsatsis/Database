@@ -1,0 +1,113 @@
+html {
+    height: 100%;
+  }
+  body {
+    margin:0;
+    padding:0;
+    font-family: sans-serif;
+    background: #243b55;
+    text-align: center;
+    color: aliceblue;
+  }
+
+  .split {
+    height: 100%;
+    width: 50%;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    overflow-x: hidden;
+    padding-top: 20px;
+  }
+
+  .left {
+    left: 0;
+  }
+  
+  /* Control the right side */
+  .right {
+    right: 1%;
+  }
+
+  
+
+  #help{
+    max-width: 10%;
+    max-height: 10%;
+  }
+
+  #information{
+    display: none;
+    position: relative;
+    left: 50px;
+    width: 100px;
+    height: 80px;
+    font-size: 14px;
+    background: rgb(255, 51, 0);
+}
+  caption img:hover + #information{
+    display: inline-flex;
+}
+
+  #Energy-Cross{ 
+    max-width: 85%;
+    height: auto;
+    width: auto\9; /* ie8 */
+    display: block;
+  }
+  .centered {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+   .login-box button {
+    background-color:#000000;
+    color: #f20089;
+    border-color:transparent;
+    border-radius: 12px;
+    height: 40px;
+    width: 100px;
+    margin-top: 10px;
+  } 
+  .login-box {
+    margin-top: 50px;
+  } 
+
+  table {
+    border-collapse: collapse;
+    margin-bottom: -2%;
+    width: 1%;
+    font-size: 2.5vh;
+    box-shadow: 0  0 20px rgba(0, 0, 0, 0.15);
+  } 
+  
+  th {
+    border: 2px solid pink;
+    padding: 4px;
+    background-color: #009879;
+
+  }
+  td {
+    border: 3px solid pink;
+    padding: 4px;
+    background-color: aliceblue;
+    color: black;
+
+  }
+  caption{
+    font-size:larger;
+    font-family: sans-serif;
+    color: aliceblue;
+    font-weight: bold;
+
+  }
+  .ButtonInput{
+    background-color:#000000;
+    color: #f20089;
+    border-color:transparent;
+    border-radius: 12px;
+    height: 40px;
+    width: 100px;
+    margin-top: 10px;
+  }

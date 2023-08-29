@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <head>
+            <link rel="stylesheet" href="{{url_for('static',filename='css/style.css')}}">
+          </head>
+         
+    </head>
+    <body>
+        <p>
+        <div class="split left">
+            <!-- Target Element:{{target}} -->
+            <div class="centered">
+                    <table style="width: 50%;">
+                        <caption>
+                            Input Element Details
+                        </caption>
+                        <tr>
+                            <th>Name</td>
+                            <th>Half-Life</td>
+                            <th>Abundance %</td>
+                            <th>J/π</td>   
+                        </tr>
+                        <tr>
+                        {% for element in target[:-3]%}
+                            <td>{{element}}</td>
+                        {% endfor %}
+                        </tr>
+                    </table>
+                </p>
+                <br>
+                <p>
+                            <!-- Product Element:{{product}} -->
+                    <table>
+                        <caption>
+                            Product Details
+                        </caption>
+
+                        <tr>
+                            <th>Name</td>
+                            <th>Half-Life</td>
+                            <th>Abundance %</td>
+                            <th>J/π</td>
+                            <th>Beta+ Decay</td>
+                            <th>Beta- Decay</td>
+                            <th>Electron Capture</td>
+                        </tr>
+                        <tr>
+                        {% for product in product %}
+                            <td>{{product}}</td>
+                        {% endfor %}
+                        </tr>
+                    </table>
+                </p>
+                <br>
+                <p>
+                    <!-- Gamma Ray Product:{{productGamma}} --> 
+                    <table style="width: 55%;">
+                        <caption> 
+                            Gamma Ray Details for Product <img id="help" src="../static/images/Exclamation-Point (1).png" class="box4">
+                            <div id="information">Only Values with intensity above 5% present in the tables.</div> 
+                        </caption>
+                        <tr>
+                            <th>Gamma Value</th>
+                            <th>Gamma Intensity %</th>
+                        </tr>
+                        {%for line in gammaresults%}
+                        <tr>
+                        {% for gamma in line %}
+                            <td>{{gamma}}</td>
+                        {% endfor %}
+                        </tr>
+                        {%endfor%}
+                    </table>
+
+                </p>
+                <br>
+                <p>
+                    <!-- Xray Product:{{productXray}} -->
+                    <table style="width: 50%;">
+                        <caption>
+                            X-Ray Details for Product <img id="help" src="../static/images/Exclamation-Point (1).png" class="box4">
+                            <div id="information">Only Values with intensity above 5% present in the tables.</div> 
+                        </caption>
+
+                        <tr>
+                            <th>X-Ray Value</th>
+                            <th>X-Ray Intensity %</th>
+                        </tr>
+                        {%for line in xrayresults%}
+                        <tr>
+                        {% for xray in line %}
+                            <td>{{xray}}</td>
+                        {% endfor %}
+                        </tr>
+                        {%endfor%}
+                    </table>
+                </p>
+                <br>    
+            </div>
+            <!-- Reaction:{{reactionDetails}} -->
+            
+        <div class="split right">
+            <div class="centered">
+                <table>
+                    <caption>
+                        Reaction Details
+                    </caption>
+
+                    <tr>
+                        <th>Reaction Type</td>
+                        <th>Minimum Energy (MeV)</td>
+                        <th>Maximum Energy (MeV)</td>
+                        <th>Datapoints</td>
+                        <th>Q Value</td>
+                        <th>Threshold</td>    
+                        <th>Source</td>
+                    </tr>
+                    {% for line in reactionresults %}
+                    <tr>
+                    {% for reaction in line %}
+                        <td>{{reaction}}</td>
+                    {% endfor %}
+                    </tr>
+                    {%endfor%}
+                </table>
+                </p>
+                <br>
+                <img id="Energy-Cross" src="../static/images/Plot.png" alt="Energy Plot">
+                <p>
+            </div>
+        </div>     
+    </body>
+</html>

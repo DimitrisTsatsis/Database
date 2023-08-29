@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="{{url_for('static',filename='css/Input_style.css')}}">
+      </head>
+    <body>
+        <form action="{{url_for('reactioninput')}}"  method="post" class="login-box">
+            <div class="Container1">
+                <label for="Name" class="box1">Element Name:</label>
+                <br>
+                <input type="text" placeholder="70Ge" name="Name" value="{{request.form.get['Name']}}" required>
+                <br>
+
+                <label for="reaction" class="box2">Reaction Type:</label>
+                <br>
+                    <select id="reaction" name="reaction"
+                    value="{{ request.form['reaction'] }}">
+                    <option value="pg">(p,γ)</option>
+                    <option value="pn">(p,n)</option>
+                    </select>
+                <br>
+                
+                <label for="product" class="box3">Product Element: </label>
+                <br>
+                <input type="text" name="product" value="{{request.form.get['product']}}">
+                <br>
+            </div>
+            <label for="Emin">Minimum Energy (MeV): </label>
+            <br>
+            <input type="number" name="Emin" value="{{request.form.get['Emin']}}">
+            <br>
+
+            <label for="Emax">Maximum Energy (MeV):</label>
+            <br>
+            <input type="text"  name="Emax" value="{{request.form.get['Emax']}}">
+            <br>
+
+            <label for="points">Datapoints:</label>
+            <br>
+            <input type="text" name="points" value="{{request.form.get['points']}}">
+            <br>
+
+            <!-- <label for="crossSection">Cross Section:</label>
+            <br>
+            <input type="number" name="crossSection" value="{{request.form.get['crossSection']}}">
+            <br> -->
+
+            <label for="qValue">Q Value (MeV): </label>
+            <br>
+            <input type="number" name="qValue" value="{{request.form.get['qValue']}}">
+            <br>
+            
+            <label for="source"> Literature: </label>
+            <br>
+            <input type="text" name="source" value="{{request.form.get['source']}}">
+            <br>
+
+            <button type="submit">
+                Submit
+            </button>
+        </form>
+    </body>
+</html>
