@@ -193,7 +193,7 @@ def results():
             print("energyvalues",energy_values)
             print("cross Section",cross_Section)
             print("error",yerror)
-            if np.log(energy_values).all() and np.log(cross_Section).all():
+            if any(value > 0 for value in energy_values) and any(cross > 0 for cross in cross_Section):
                 generate_plot(energy_values,cross_Section,yerror, "Cross Section - Energy", "Energy (MeV)", "Cross Section (mbarn)")
         
 
