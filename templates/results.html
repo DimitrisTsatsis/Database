@@ -46,9 +46,13 @@
                             <th>Electron Capture</td>
                         </tr>
                         <tr>
-                        {% for product in product %}
-                            <td>{{product}}</td>
-                        {% endfor %}
+                        {%if product%}
+                            {% for product in product %}
+                                <td>{{product}}</td>
+                            {% endfor %}
+                        {%else%}
+                            <h2>You forgot to add the product element :P</h2>
+                        {%endif%}
                         </tr>
                     </table>
                 </p>
@@ -126,7 +130,13 @@
                 </table>
                 </p>
                 <br>
-                <img id="Energy-Cross" src="../static/images/Plot.png" alt="Energy Plot">
+                {% set image_url = "../static/images/Plot.png" %}
+                {% if image_url %}
+                    <img id="Energy-Cross" src="{{ image_url }}" >
+                {% else %}
+                    <p>No image found.</p>
+                {% endif %}
+
                 <p>
             </div>
         </div>     

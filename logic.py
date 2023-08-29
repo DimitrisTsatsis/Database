@@ -8,6 +8,7 @@ plt.switch_backend('agg')
 from pathlib import Path
 import pandas as pd
 import numpy as np
+import os
 
 
 
@@ -32,15 +33,15 @@ file_path = Path("calculation.txt")
 
 
 def generate_plot(x_values,y_values,yerror, title, x_label, y_label):
-    # if file_path.exists():
-    #     dataframe=pd.read_csv("calculation.txt", delimiter=" ", skiprows=5, header=None)
-    #     print(dataframe)
-    #     energycal=dataframe[0]
-    #     crossSecCal=dataframe[1]
+    if file_path.exists():
+        dataframe=pd.read_csv("calculation.txt", delimiter=" ", skiprows=5, header=None)
+        print(dataframe)
+        energycal=dataframe[0]
+        crossSecCal=dataframe[1]
+        plt.plot(energycal,crossSecCal, "g",marker="+", label="Talys results")
     plt.figure(figsize=(12, 10))  # Set the figure size
     plt.scatter(x_values, y_values, marker='o', label="Literrature Results")  # Create the plot
     plt.errorbar(x_values, y_values, yerr=yerror, fmt='o', label="Cross Section Error")
-    #plt.plot(energycal,crossSecCal, "g",marker="+", label="Talys results")
     plt.title(title, size=20)  # Set the plot title
     decimal_places = 1  # Set the number of decimal places you want to display
     #plt.xticks(energycal, [f"{float(x):.{decimal_places}f}" for x in energycal], size=16)
@@ -150,6 +151,7 @@ def results():
                     FROM elements 
                     WHERE name='{inpElement}'"""
             elementDetails = execute_query(elementQuery)
+            print("elemetn", elementDetails)
 
             
             gammaQuery = f"""
@@ -182,20 +184,17 @@ def results():
             energy_values = [entry[2] for entry in energyResults]
             cross_Section = [entry[3] for entry in energyResults]
             yerror = [float(entry[4]) for entry in energyResults]
-            # for error in energyResults:
-            #     scientific_value_str = error[4]
-            #     try:
-            #         yerror = float(scientific_value_str)
-            #         print(yerror)
-            #     except ValueError as e:
-            #         print("Error converting:", e)
+        
 
             print("energyvalues",energy_values)
             print("cross Section",cross_Section)
             print("error",yerror)
+            if os.path.exists("static\images\Plot.png"):
+                os.remove("static\images\Plot.png") #Deletes existing figure to have a new one every time
+
             if any(value > 0 for value in energy_values) and any(cross > 0 for cross in cross_Section):
                 generate_plot(energy_values,cross_Section,yerror, "Cross Section - Energy", "Energy (MeV)", "Cross Section (mbarn)")
-        
+
 
             reactionQuery = f"""
                 SELECT
@@ -226,7 +225,10 @@ def results():
                         WHERE target.name='{inpElement}' AND reactions.type='{inpReaction}'"""
                 productResults = execute_query(productQuery)
                 print("product",productResults)
-                productElement = productResults[0][0]
+                if not productResults:
+                    productElement = "error"
+                else:
+                    productElement = productResults[0][0]
                 
                 gammaQueryPro = f"""
                         SELECT
@@ -280,6 +282,7 @@ def results():
             gammaList=list(map(lambda x: str(x).replace("NULL","None"), gammaList))
             pgammatList=list(map(lambda x: str(x).replace("NULL","None"), pgammatList))
             pXrayList=list(map(lambda x: str(x).replace("NULL","None"), pXrayList))
+            print("element", elementList)
 
             return render_template("results.html", target= elementList, targetGamma=gammaList, targetXray=xrayList, reactionDetails=reactionList, product=productList, productGamma=pgammatList, gammaresults=gammaResults, productXray=pXrayList, xrayresults=xrayResults, reactionresults=reactionResults)
         except Error as e:
