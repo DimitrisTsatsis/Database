@@ -5,6 +5,7 @@ import click
 from flask import current_app, g
 
 
+#This functions makes a query to create a table in the database. 
 def create_table(conn, create_table_sql):
     try:
         c = conn.cursor()
@@ -12,7 +13,7 @@ def create_table(conn, create_table_sql):
     except Error as e:
         print(e)
 
-
+#It creates a connection with SQLite and creates the database named Reactions_DB.
 def get_db():
     if 'db' not in g:
         g.db = sqlite3.connect(
@@ -23,6 +24,7 @@ def get_db():
 
     return g.db
 
+#Closes the Database.
 def close_db(e=None):
     db = g.pop('db', None)
 
@@ -45,6 +47,8 @@ def init_app(app):
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)
 
+#Creates a fucntion that allows us to update the Database. You need a csv file to update it and the name of the file has to follow the name of the 
+#if statements. The -4 in the if statements just removes the .csv in order to read only the name of the input file.
 def update_table_with_csv(conn,update_table_sql):
     df = pandas.read_csv(update_table_sql)
 
@@ -61,11 +65,12 @@ def update_table_with_csv(conn,update_table_sql):
     if update_table_sql[:-4]=="energy":
        table_to_update="crossSection"
 
-
     df.to_sql(table_to_update, conn, if_exists="append", index=False)
 
 
-
+#This is the function that creates and updates the database tables when running base.py. The create table command creates a new tables in the Databse 
+#from the schema.sql. The update table with csv command updates existing tables with elements from the csv files inputed in the main folder of the
+#database.
 def main():
     database="Reactions_DB.db"
 
@@ -73,7 +78,6 @@ def main():
 
     if conn is not None:
         #create_table(conn,"CREATE.sql")
-        #update_table_with_csv(conn,"energy.csv")
         # c=conn.cursor()
         # c.execute("""
         #     ALTER TABLE crossSection

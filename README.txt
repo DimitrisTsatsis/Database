@@ -24,8 +24,13 @@ Here's a breakdown of the key components and what you'll need to execute it:
 
 7) The Flask development server will start, and you can access the application in a web browser by navigating to http://localhost:5000.
 
-More Details:
+UPDATING THE DATABASE:
 
-1) The different excel files function as the csv files needed to create the original database. The database can be updated in three ways. From the csv files directly by updating those and executing the base.py file. This will update the database with the changes made to the csv files. Another way is through a database visualizer like "BD Browser", where you can directly input the data in columns. Lastly in the database page has two links that redirect the user to two different pages. One to input elements and one to input reactions.
+	The different excel files function as the csv files needed to create the original database. The database can be updated in three ways. From the csv files directly by updating those and executing the base.py file. This will update the database with the changes made to the csv files. Make sure that the information you are trying to input does not exist in the databse, otherwise it will create multiple copies of the same information, leading to the presentations of redundant results. You can update five different tables: Elements, Gamma, XRAY, REACTIONS and CROSS SECTION. Each has different information that are related to each other through queries in logic.py. To have a overview of all the elements in the database and the different tables you can use a viesualiser such as "BD Browser", where you can directly input the data in columns of the different tables. This can fucntion as another way to input data. Make sure to follow the format of the other inputs as it is necessary in order to present the data in the application. Lastly in the database page has two links that redirect the user to two different pages. One to input elements and one to input reactions.
 
-NOTE: You cant enter two elements with the same name, for example you cant enter two times 54FE. I will try to make so it can detect if the element exist and give an error message but for now there needs to be caution in the input of elements in the database. 
+NOTE: You cant enter two elements with the same name, for example you cant enter two times 54Fe. I will try to make so it can detect if the element exist and give an error message but for now there needs to be caution in the input of elements in the database. 
+
+INFORMATION ON THE DIFFERENT ASPECTS OF THE ALSO EXIST IN THE CODE ITSELF TO BETTER EXPLAIN THE DIFFERENT FUCNTIONS.
+
+
+

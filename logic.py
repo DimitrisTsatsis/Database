@@ -13,7 +13,12 @@ import os
 
 
 
+
 app = Flask(__name__)
+
+# This function creates a connection with sqlite and allow the user to execute the different queries in the Database, such as requesting or 
+# adding information to the Database. The if statement is necessary to disntinguish what the function will do if the query has values that
+# need parametrisation or not.
 
 def execute_query(query, params=None):
     conn = sqlite3.connect("Reactions_DB.db")
@@ -29,13 +34,16 @@ def execute_query(query, params=None):
     c.close()
     conn.close()
 
+
+# Here is created the plot that is presented in the results page. The if statement plots the calculation from talys if the file calculation.txt
+# exists in the main folder of the Database. Out of the if statement the plot for the literature data is generated. The function needs 6 parameters
+# where the first two determine the x and y axis values and following that the error for the y axis, the name of the plot and the names of the
+# x and y axis respectively.
+
 file_path = Path("calculation.txt")
-
-
 def generate_plot(x_values,y_values,yerror, title, x_label, y_label):
     if file_path.exists():
-        dataframe=pd.read_csv("calculation.txt", delimiter=" ", skiprows=5, header=None)
-        print(dataframe)
+        dataframe=pd.read_csv("calculation.txt", delimiter=" ", skiprows=5, header=None) #Reads data from the talys files and skips the commented out lines in the file
         energycal=dataframe[0]
         crossSecCal=dataframe[1]
         plt.plot(energycal,crossSecCal, "g",marker="+", label="Talys results")
@@ -44,24 +52,22 @@ def generate_plot(x_values,y_values,yerror, title, x_label, y_label):
     plt.errorbar(x_values, y_values, yerr=yerror, fmt='o', label="Cross Section Error")
     plt.title(title, size=20)  # Set the plot title
     decimal_places = 1  # Set the number of decimal places you want to display
-    #plt.xticks(energycal, [f"{float(x):.{decimal_places}f}" for x in energycal], size=16)
     plt.yticks(size=16)
     plt.xlabel(x_label, size=20)  # Set the x-axis label
     plt.ylabel(y_label, size=20)  # Set the y-axis label
-    #plt.yscale("log")
     plt.xscale("log")
-    #plt.grid(True)  # Display grid lines
     plt.legend(fontsize=18)
     plt.savefig("static\images\Plot.png") # Save the plot
 
     
-
+#Returns the first page of the application. It is necessary to launch and be directed to the home page.
 @app.route("/")
 def main():
     return render_template('Reaction_identifier.html')
 
 
-
+#Creates the input page, that allow the user to input different elements in the database. Creates an sqlite query that inserts data in the elements
+# table in the Dabatase.
 @app.route("/input", methods=["POST", "GET"])
 def input():
     if request.method=="POST":
@@ -98,9 +104,10 @@ def input():
         ]
         ElementInputDetails=execute_query(elementInsert, params)
 
-        
     return render_template('Input.html')
 
+#It has the same function as the previous function. It creates the url for the page that allow to insert reaction information and makes an sqlite 
+# query to insert the information in the reactions table.
 @app.route("/reactioninput", methods=["POST", "GET"])
 def reactioninput():
     if request.method=="POST":
@@ -110,7 +117,6 @@ def reactioninput():
         Reaction_Emax = request.form.get('Emax')
         Reaction_Emin = request.form.get('Emin')
         Reaction_datapoint = request.form.get('points')
-       # Reaction_crossSection = request.form.get('crossSection')
         Reaction_qValue = request.form.get('qValue')
         Reaction_source = request.form.get('source')
 
@@ -124,14 +130,13 @@ def reactioninput():
             Element_name, Reaction_type, Reaction_product, Reaction_Emax, Reaction_Emin,
             Reaction_datapoint, Reaction_qValue, Reaction_source
         ]
-
         reactionInsertDetails=execute_query(reactionInsert, params)
-
     return render_template('Reaction_Input.html')
 
 
    
-
+#In this sections the Post method allow the user to input the element they wish to search, the energy range and the reaction type they desire and 
+#creates queries that select these inforamtion from the different tables of the database and presents them in the results page.
 @app.route("/results", methods= ["POST", "GET"])
 def results():
     if request.method=="POST":
@@ -178,7 +183,6 @@ def results():
                     FROM crossSection
                     WHERE targetId='{inpElement}' AND reaction='{inpReaction}'"""
             energyResults= execute_query(energyQuery)
-           # print(energyResults)
 
             #Extracting the desired values
             energy_values = [entry[2] for entry in energyResults]
@@ -186,14 +190,12 @@ def results():
             yerror = [float(entry[4]) for entry in energyResults]
         
 
-            print("energyvalues",energy_values)
-            print("cross Section",cross_Section)
-            print("error",yerror)
+            
             if os.path.exists("static\images\Plot.png"):
                 os.remove("static\images\Plot.png") #Deletes existing figure to have a new one every time
 
             if any(value > 0 for value in energy_values) and any(cross > 0 for cross in cross_Section):
-                generate_plot(energy_values,cross_Section,yerror, "Cross Section - Energy", "Energy (MeV)", "Cross Section (mbarn)")
+                generate_plot(energy_values,cross_Section,yerror, "Cross Section - Energy", "Energy (MeV)", "Cross Section (mbarn)") #Plots the graph on the results page
 
 
             reactionQuery = f"""
@@ -206,9 +208,7 @@ def results():
             if inpEnergy:
                 energyConstraint= f" AND energyMin <= '{inpEnergy}' AND energyMax >= '{inpEnergy}'"
                 reactionQuery = reactionQuery+energyConstraint
-            reactionResults = execute_query(reactionQuery)
-            print("reaction results", reactionResults)
-            
+            reactionResults = execute_query(reactionQuery)            
             productResults=[]
             gammaResults=[]
             xrayResults=[]
@@ -238,7 +238,6 @@ def results():
                         on gamma.elementId=elements.name
                         WHERE elements.name='{productElement}'"""
                 gammaResults = execute_query(gammaQueryPro)
-                #print(gammaResults) 
                 xrayQueryPro = f"""
                         SELECT
                             value, intensity
@@ -247,7 +246,8 @@ def results():
                         on xray.elementId=elements.name
                         WHERE elements.name='{productElement}'"""
                 xrayResults = execute_query(xrayQueryPro)
-               # print(xrayResults)
+                #The elements selected from the database are not in a format that could be presented in tables in html. So here we pass them in lists
+                #so they can be iterated and presented as tables in the results page.
             elementList = []
             gammaList = []
             xrayList = []
@@ -263,16 +263,15 @@ def results():
                 xrayList = [value,intensity]
             for (type, energyMin, energyMax, dataPoint, qValue, threshold, source) in reactionResults:
                 reactionList = [type,energyMin,energyMax,dataPoint,qValue, threshold, source]
-            # for (targetId, reaction, energy, crossSection) in energyResults:
-            #     energyList = [targetId,reaction,energy,crossSection]
             for  (productname, producthalfLife, productabundance, productparity, productbetaPlusDecay, productbetaMinusDecay, productecDecay) in productResults:
                 productList = [productname, producthalfLife, productabundance, productparity, productbetaPlusDecay, productbetaMinusDecay, productecDecay]
             for (value, intensity) in pgammatList:
-                # value = row['value']  
-                # intensity = row['intensity']
                 pgammatList= [value,intensity]
             for (value,intensity) in pXrayList:
                 pXrayList = [value,intensity]
+        
+            #Replacing any 0 selected from the database to None and any 1 to Yes. The same for Null and it become None, otherwise there are error
+            #when trying to present this information, as it doesnt recognise the value.
             
             elementList[-3:]=list(map(lambda x: str(x).replace("0","None"), elementList[-3:]))
             productList[-3:]=list(map(lambda x: str(x).replace("0","None"), productList[-3:]))
@@ -283,7 +282,6 @@ def results():
             pgammatList=list(map(lambda x: str(x).replace("NULL","None"), pgammatList))
             pXrayList=list(map(lambda x: str(x).replace("NULL","None"), pXrayList))
             print("element", elementList)
-
             return render_template("results.html", target= elementList, targetGamma=gammaList, targetXray=xrayList, reactionDetails=reactionList, product=productList, productGamma=pgammatList, gammaresults=gammaResults, productXray=pXrayList, xrayresults=xrayResults, reactionresults=reactionResults)
         except Error as e:
             return e
